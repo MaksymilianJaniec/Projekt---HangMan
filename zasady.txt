@@ -1,0 +1,7 @@
+ZASADY GRY:
+1. Slowa zawieraja polskie litery.
+2. Nie wpisuj wielkich liter, wpisanie wielkiej litery skutkuje naliczeniem bledu.
+3. Zeby wpisac litere, kliknij w pole do tego przeznaczone, w przeciwnym razie naliczany bedzie blad.
+4. Baw sie dobrze, to tylko zabawa.
+
+Cofnij, zeby zagrac :)

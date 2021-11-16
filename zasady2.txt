@@ -1,0 +1,7 @@
+GAME RULES:
+1. Words do not contain Polish letters.
+2. Do not enter capital letters, entering a capital letter will result in a mistake.
+3. To enter a letter, click on the field for this, otherwise a mistake will be made.
+4. Have fun, it's just fun.
+
+Undo to play :)

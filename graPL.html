@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<title>HANGMAN</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+var wszystkiebledy = 6;
+var blad = 0;
+var zgadywanywyraz = [];
+
+/**************************************
+*nazwa funkcji: wykonajXML()
+*
+*parametry wejściowe: slowa.xml - przchowuje słowa do gry
+                      zgadywanywyraz - pusta tablica
+*wartość zwracana: funkcja zwraca do akapitu o id="zgadywanywyraz", zakodowane slowo do odgadnięcia.
+*opis funkcji: funkcja pobiera z pliku slowa.xml jego zawartość, po czym spośród zawartości losowane jest jedno słowo, które w nastepnej instrukcji jest zamieniane na znaki '_' i zapisane do akapitu o id="zgadywanywyraz".
+*
+*autor: Maksymilian Janiec kl.3Cg
+*************************************/
+
+function wykonajXML() {
+$(document).ready(function() {
+$.ajax({
+type: "GET",
+url: "slowa.xml",
+dataType: "xml",
+success: function(xml) {
+
+zgadywanywyraz = [];
+//losowanie wyrazu
+$a = (Math.floor(Math.random()* $(xml).find('slowo').length));
+$wylosowanywyraz = $($(xml).find('slowo').eq($a)).text();
+
+//zamiana wyrazu na _
+for(var i=0; i<$wylosowanywyraz.length;i++)
+{  
+    zgadywanywyraz[i]=" _ ";   
+}
+
+//zapisanie w p, zakodowanego wyrazu
+$('#zgadywanywyraz').text(zgadywanywyraz);
+
+}
+});
+});
+};//koniec funkcji wykonajXML
+
+
+/**************************************
+*nazwa funkcji: odgadywanie()
+*
+*parametry wejściowe: odgadnieta - wartość false
+                      odgadnietalitera - wartość 0
+
+*wartość zwracana: funkcja zwraca komunikat o wygranej/przegranej gracza, liczbę ewentualnych pomyłek, "szubienicę", zakodowane słowo
+*opis funkcji: Funkcja na początku porównuje, czy wartość pola tekstowego o id="poledopisania" jest taka sama z $wylosowanywyraz.charAt(i), jeśli tak to zmienna odgadnięta otrzymuje wartość true, jeśli odgadnięta dalej jest wartości false, liczone są pomyłki. 
+               Następnie wartość pola tesktowego porównywana jest z zgadywanywyraz[i], w którym zakodowany jest wyraz do odgadnięcia, jeśli tak, to za '_' podmieniana jest warość pola tekstowego.
+               Funkcja sprawdza czy gracz wygrał/przegrał, zwraca komunikat o wygranej, jeśli odgadnietalitera = $wylosowanywyraz.length, oraz komunikat o przegranej jeśli blad==wszystkiebledy.
+               Funkcja "rysuje" kolejne częśći "szubienicy" za pomocą instrukcji warunkowej if.
+*
+*autor: Maksymilian Janiec kl.3Cg
+*************************************/
+
+
+function odgadywanie()
+{
+var odgadnieta = false;
+var odgadnietalitera = 0;
+
+
+for(var i=0; i<$wylosowanywyraz.length;i++)
+{
+
+if(document.getElementById("poledopisania").value == $wylosowanywyraz.charAt(i))  
+{
+odgadnieta = true; 
+
+zgadywanywyraz[i] = document.getElementById("poledopisania").value;
+$('#zgadywanywyraz').text(zgadywanywyraz); 
+}    
+
+//liczenie odgadniętych liter do wygranej
+if( zgadywanywyraz[i] == $wylosowanywyraz.charAt(i))
+{
+odgadnietalitera++; 
+}   
+             
+}
+
+//liczenie pomyłek
+if(!odgadnieta)
+{
+$('#pomylki').text("Pomyłka nr " + (blad+1));  
+blad++;  
+
+//komunikat o przegranej
+if(blad==wszystkiebledy)
+{
+    $("#komunikat").html("<h1>Niestety, przegrałeś, ukryty wyraz to: " + $wylosowanywyraz +"</h1><br>"+' <span class="reset" onclick="location.reload()">ZAGRAJ JESZCE RAZ (Kliknij)</span>')
+}
+
+//szubienica
+if(blad == 1)
+{
+    $("#szub").html('<img src="blad1.png" alt="jeden" />');
+}
+if(blad == 2)
+{
+    $("#szub").html('<img src="blad2.png" alt="dwa" />');
+}
+if(blad == 3)
+{
+    $("#szub").html('<img src="blad3.png" alt="trzy" />');
+}
+if(blad == 4)
+{
+    $("#szub").html('<img src="blad4.png" alt="cztery" />');
+}
+if(blad == 5)
+{
+    $("#szub").html('<img src="blad5.png" alt="pięć" />');
+}
+if(blad == 6)
+{
+    $("#szub").html('<img src="blad6.png" alt="pięć" />');
+}
+
+}
+
+//komunikat o zwycięstwie
+if(odgadnietalitera == $wylosowanywyraz.length)
+{
+    $("#komunikat").html("<h1>Brawo, odgadłeś wyraz !!!</h1>"  + '<span class="reset" onclick="location.reload()">ZAGRAJ JESZCE RAZ (Kliknij) </span>')
+}
+
+//pobieranie wartości pola tekstowego
+document.getElementById("poledopisania").value="";
+};//koniec funkcji odgadywanie
+
+
+
+
+</script>
+
+<style>
+#baner
+{
+text-align: center;    
+
+}
+
+#back
+{
+width: 5%;   
+height: 70px;
+float: left;
+margin-left: 10px;
+margin-top: 10px;
+
+}
+
+#cale
+{
+width: 100%;
+height: 70px;
+float: left;    
+background-color: violet;
+border-radius: 10px;
+color: purple;
+float: left;
+}
+
+#blok
+{
+padding-top: 50px;
+width: 70%;    
+height: 500px;
+float: left;
+background-color: white;
+text-align: center;
+}    
+
+#rysowanie
+{
+width: 30%;
+height: 550px;
+float: left;   
+}
+
+#dol
+{
+width: 100%;
+background-color: violet;
+border-radius: 10px;
+color: purple;
+height: 100px;
+float: left;
+text-align: center;
+}
+
+#szub
+{
+height: 400px;
+width:250px;
+background-color: white;    
+margin-left: 50px;
+margin-top: 50px;
+border-color: purple;
+border-style: solid;
+border-width: 5px;
+}
+
+img
+{
+height: 400px;    
+}
+
+
+
+</style>
+
+</head>
+<body>
+<div id="cale"><div id="back"><a href="index.html">Powrót</a></div> <div id="baner"><h1>FLOWERMAN</h1></div></div>
+
+<div id="blok">  
+    <h2><a href="zasady.txt">ZASADY GRY</a></h2>
+    <h1>Wylosuj wyraz i odgadnij go!</h1>
+
+    <button type="button" name="button" onclick="wykonajXML()">Losuj</button><br>
+
+    <p id="zgadywanywyraz"></p><br><br>
+
+    <input type="text" id="poledopisania"><br><br>
+    <button type="button" name="button" onclick="odgadywanie()">Zgadnij literę</button><br>
+    <p id="pomylki"></p>
+    <p id="komunikat"></p>
+
+</div><br><br>
+
+<div id="rysowanie">
+    <h3>Twoje błędy przedstawione graficznie:</h3>
+    <div id="szub">
+        <img src="orginal.png">
+    </div>
+</div>
+
+<div id="dol"> <h1>Jeśli chcesz być częścią projektu, zostaw donate (donate przyjmowane w sali 3Cg na przerwach!)</h1></div>
+
+
+
+</body>
+</html>
